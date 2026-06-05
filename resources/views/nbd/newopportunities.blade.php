@@ -72,7 +72,7 @@
                           Confidence
                       </th>
                       <th>
-                          Rep
+                          Vendor Rep
                       </th>
                       <th>
                           Notes

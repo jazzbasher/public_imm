@@ -7,7 +7,7 @@
 @stop
 
 @section('content')
-    <p>Public IMM</p>
+    <p>NDB Content Coming Soon</p>
 @stop
 
 @section('css')

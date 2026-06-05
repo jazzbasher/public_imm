@@ -58,7 +58,7 @@
                           Customer
                       </th>
                       <th>
-                          Address
+                          City
                       </th>
                       <th>
                           Estimated Spend

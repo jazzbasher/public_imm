@@ -351,18 +351,6 @@ return [
                     'icon_color' => 'white',
                 ],
                 [
-                    'text' => 'Current Promo',
-                    'url' => 'nbd/currentpromo',
-                    'icon' => 'fas fa-tags',
-                    'icon_color' => 'warning',
-                ],
-                [
-                    'text' => 'Inventory Review',
-                    'url' => 'nbd/inventoryreview',
-                    'icon' => 'fas fa-qrcode',
-                    'icon_color' => 'secondary',
-                ],
-                [
                     'text' => 'Vending Pipeline',
                     'url' => 'nbd/vendingpipeline',
                     'icon' => 'fas fa-tools',
