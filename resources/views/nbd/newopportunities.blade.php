@@ -49,8 +49,8 @@
           </div></a>
         </div>
         <div class="card-body p-0">
-          <div class="table-responsive"> 
-          <table class="table table-sm table-striped projects">
+          <div> 
+          <table class="table-card-mobile table table-sm table-striped projects">
               <thead class="small">
                   <tr>
                       <th>
@@ -134,6 +134,7 @@
 
     @push('css')
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/mobile-tables.css') }}">
     @endpush
 
     @push('js')

@@ -1,0 +1,35 @@
+@media (max-width: 576px) {
+    /* Hide the traditional table header entirely */
+    .table-card-mobile thead {
+        display: none;
+    }
+    /* Force table elements to stack vertically */
+    .table-card-mobile, 
+    .table-card-mobile tbody, 
+    .table-card-mobile tr, 
+    .table-card-mobile td {
+        display: block;
+        width: 100%;
+    }
+    /* Give each row visual separation */
+    .table-card-mobile tr {
+        margin-bottom: 15px;
+        border: 1px solid #dee2e6;
+        padding: 10px;
+    }
+    /* Style cells to act like key-value card pairs */
+    .table-card-mobile td {
+        text-align: right;
+        position: relative;
+        padding-left: 50%;
+    }
+    /* Optional: Use data-label attributes to add headers back inline */
+    .table-card-mobile td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        width: 45%;
+        text-align: left;
+        font-weight: bold;
+    }
+}
