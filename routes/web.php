@@ -15,7 +15,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 Route::middleware(['auth'])->group(function () {
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('nbd/newleads');
 });
 
 // Route::get('/nbd', [NBDController::class, 'index'])->name('nbd');
@@ -62,6 +62,6 @@ Route::post('nbd/vendingpipeline/store', [NBDController::class, 'storepipeline']
 
 
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 });
