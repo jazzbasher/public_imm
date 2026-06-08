@@ -38,7 +38,7 @@
                       </div>
                       <div class="form-group">
                         <label for="title">Vendor Rep Name</label>
-                        <input type="text" class="form-control" id="vendor_rep" name="vendor_rep" autocomplete="off">
+                        <input type="text" class="form-control" id="vendor_rep" name="vendor_rep" autocomplete="off" required>
                       </div>
                       
 
