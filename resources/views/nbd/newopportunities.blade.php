@@ -19,10 +19,15 @@
           </div>
           <div class="col-12 col-sm-6 col-md-3">
             <div class="info-box mb-3">
-              <span class="info-box-icon bg-warning elevation-1"><i class="fab fa-quora"></i></span>
+              <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-hand-holding-usd"></i></span>
               <div class="info-box-content">
-                <span class="info-box-text">Quotes Given</span>
-                <span class="info-box-number">{{ $countquotes }}</span>
+                <span class="info-box-text">Total Value</span>
+                <span class="info-box-number">
+                          @if(!empty($totalvalue ))
+                          $
+                          @endif
+
+                        {{ $totalvalue !== null ? number_format($totalvalue,0) : '' }}</span>
               </div>
             </div>
           </div>
@@ -81,6 +86,7 @@
                           Created
                       </th>
                       <th>
+                          Edit
                       </th>
                   </tr>
               </thead>
@@ -98,13 +104,20 @@
                         <input type="checkbox" data-on="Yes" data-off="No" data-toggle="toggle" data-onstyle="success" data-offstyle="dark" data-style="border" data-size="xs" name="contact_made" value="1" @checked($opportunity->quote == 1) disabled>
                       </td>
                       <td>
-                          {{ $opportunity->projected_value }}
+                          @if(!empty($opportunity->projected_value ))
+                          $
+                          @endif
+
+                          {{ $opportunity->projected_value !== null ? number_format($opportunity->projected_value, 0) : '' }}
                       </td>
                       <td>
                           {{ $opportunity->close_date ? \Carbon\Carbon::parse($opportunity->close_date)->format("m/d/y") : ''  }}
                       </td>
                       <td>
                           {{ $opportunity->confidence }}
+                          @isset($opportunity->confidence)
+                          %
+                          @endisset
                       </td>
                       <td>
                           {{ $opportunity->rep }}
@@ -115,11 +128,10 @@
                       <td>
                           {{ $opportunity->created_at ? \Carbon\Carbon::parse($opportunity->created_at)->format("m/d/y") : ''  }}
                       </td>                                      
-                      <td class="project-actions text-center">
-                          <a class="btn btn-primary btn-sm" href="#"> 
-                              <i class="fas fa-edit">
-                              </i>
-                              Edit
+                      <td class="project-actions">
+                          <a type="button" href="{{ route('edit.opportunity', ['id' => $opportunity->id]) }}" class="btn btn-tool" title="Edit this opportunity">
+              <i class="fas fa-edit"></i>
+
                           </a>
                       </td>
                   </tr>                

@@ -353,8 +353,8 @@ return [
                 [
                     'text' => 'Vending Pipeline',
                     'url' => 'nbd/vendingpipeline',
-                    'icon' => 'fas fa-tools',
-                    'icon_color' => 'primary',
+                    'icon' => 'fas fa-wave-square',
+                    'icon_color' => 'warning',
                 ],
             ],
 

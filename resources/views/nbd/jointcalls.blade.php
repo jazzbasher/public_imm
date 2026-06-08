@@ -74,6 +74,7 @@
                           Created
                       </th>
                       <th>
+                          Edit
                       </th>
                   </tr>
               </thead>
@@ -99,11 +100,9 @@
                       <td>
                           {{ $call->created_at ? \Carbon\Carbon::parse($call->created_at)->format("m/d/y") : ''  }}
                       </td>                                      
-                      <td class="project-actions text-center">
-                          <a class="btn btn-primary btn-sm" href="#"> 
-                              <i class="fas fa-edit">
-                              </i>
-                              Edit
+                      <td class="project-actions">
+                          <a type="button" href="{{ route('edit.jointcall', ['id' => $call->id]) }}" class="btn btn-tool" title="Edit this call">
+                            <i class="fas fa-edit"></i>
                           </a>
                       </td>
                   </tr>                

@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('subtitle', 'Create Opportunity')
+@section('subtitle', 'Edit Opportunity')
 
 
 @if ($errors->any())
@@ -23,27 +23,29 @@
                 <div class="row h-100 justify-content-center align-items-center">
                   
                   <div class="col-10 col-md-8 col-lg-6">
-                    <h3>Create New Opportunity</h3>
-                    <form action="{{ route('nbd.storeopportunity') }}" method="post">
+                    <h3>Edit Opportunity</h3>
+                    <form action="{{ route('edit.updateopportunity', ['id' => $id]) }} }}" method="post">
                       @csrf
                       
-
+                      @foreach($opportunities as $opportunity)
                       <div class="form-group">
                         <label for="title">Customer</label>
-                        <input type="text" class="form-control" id="customer" name="customer" autocomplete="off">
+                        <input type="text" class="form-control" id="customer" name="customer" value="{{ $opportunity->customer }}" autocomplete="off">
                       </div>
                       <div class="form-group">
                         <label for="title">Product Interest</label>
-                        <input type="text" class="form-control" id="interest" name="interest" autocomplete="off">
+                        <input type="text" class="form-control" id="interest" name="interest" value="{{ $opportunity->interest }}"  autocomplete="off">
                       </div>
                       
 
                       <br/>
 
-                      <div class="form-group custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" name="quote" id="quote">
-                        <label class="custom-control-label" for="quote">Quote Given?</label>
+                      <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="statusSwitch" name="quote" value="1"
+                        {{ old('quote', $opportunity->quote ) ? 'checked' : '' }}>
+                        <label class="custom-control-label" for="statusSwitch">Quote Given</label>
                       </div>
+
                       <br/>
 
                       <div class="form-group">
@@ -52,18 +54,18 @@
                             <div class="input-group-prepend">
                               <span class="input-group-text">$</span>
                             </div>
-                            <input type="number" class="form-control" id="projected_value" name="projected_value" min="0" placeholder="25,000">
+                            <input type="number" class="form-control" id="projected_value" name="projected_value" min="0" placeholder="25,000" value="{{ $opportunity->projected_value }}" >
                           </div>
                       </div>
                       <div class="form-group">
                         <label for="title">Projected Close Date</label>
-                        <input type="date" class="form-control" id="close_date" name="close_date" autocomplete="off">
+                        <input type="date" class="form-control" id="close_date" name="close_date" value="{{ $opportunity->close_date }}"  autocomplete="off">
                       </div>
 
                       <div class="form-group">
                       <label for="confidence">Confidence of Close</label>
                         <select class="custom-select" id="confidence" name="confidence">
-                          <option value="" disabled selected hidden>Choose...</option>
+                          <option selected>{{ $opportunity->confidence }}</option>
                           <option value="100">100%</option>
                           <option value="75">75%</option>
                           <option value="50">50%</option>
@@ -73,18 +75,19 @@
                     </div>
                       <div class="form-group">
                         <label for="title">Vendor Rep</label>
-                        <input type="text" class="form-control" id="rep" name="rep" autocomplete="off">
+                        <input type="text" class="form-control" id="rep" name="rep" value="{{ $opportunity->rep }}"  autocomplete="off">
                       </div>
                       <div class="form-group">
                         <label for="title">Comments</label>
-                        <textarea class="form-control" id="comments" name="comments" rows="3" placeholder="Type comments here..." autocomplete="off">{{ old('comments') }}</textarea>
+                        <textarea class="form-control" id="comments" name="comments" rows="3" placeholder="Type comments here..." autocomplete="off">{{ $opportunity->comments }}</textarea>
                           {{-- <input type="text" class="form-control" id="comments" name="comments" autocomplete="off"> --}}
                       </div>
+                      @endforeach
 
                       <input type="hidden" name="user_id" value="{{ auth()->id() }}">
                       <br>
                       <a href="{{ url()->previous() }}" class="btn btn-secondary mr-5">Cancel</a>
-                      <button type="submit" class="btn btn-primary">Enter</button>
+                      <button type="submit" class="btn btn-primary">Update This Opportunity</button>
                     </form>
                   </div>
                 </div>

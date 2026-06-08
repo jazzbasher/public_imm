@@ -11,7 +11,7 @@
             <div class="info-box">
               <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-phone-alt"></i></span>
               <div class="info-box-content">
-                <span class="info-box-text">Total Promos</span>
+                <span class="info-box-text">Total Pipelines</span>
                 <span class="info-box-number">{{ $pipelines->count() }}
                 </span>
               </div>
@@ -21,8 +21,12 @@
             <div class="info-box mb-3">
               <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-calendar-alt"></i></span>
               <div class="info-box-content">
-                <span class="info-box-text">Conversions</span>
-                <span class="info-box-number">0</span>
+                <span class="info-box-text">Estimated Revenue</span>
+                <span class="info-box-number">
+                            @if(!empty($totalrevenue ))
+                            $
+                            @endif
+                          {{ $totalrevenue !== null ? number_format($totalrevenue, 0)  : '' }}</span>
               </div>
             </div>
           </div>
@@ -67,9 +71,6 @@
                           Presentation
                       </th>
                       <th>
-                          Site Survey
-                      </th>
-                      <th>
                           Notes
                       </th>
                                      
@@ -77,6 +78,7 @@
                           Created
                       </th>
                       <th>
+                          Edit
                       </th>
                   </tr>
               </thead>
@@ -90,15 +92,16 @@
                           {{ $pipeline->address }} 
                       </td>
                       <td>
-                          {{ $pipeline->estimated_spend }}
+                          @if(!empty($pipeline->estimated_spend))
+                          $
+                          @endif
+
+                          {{ $pipeline->estimated_spend !== null ? number_format($pipeline->estimated_spend, 0) : '' }}
                       </td>
                      
                            <td>
                         <input type="checkbox" data-on="Yes" data-off="No" data-toggle="toggle" data-onstyle="success" data-offstyle="dark" data-style="border" data-size="xs" name="presentation" value="1" @checked($pipeline->presentation == 1) disabled>
                       
-                      </td>
-                       <td>
-                        <input type="checkbox" data-on="Yes" data-off="No" data-toggle="toggle" data-onstyle="success" data-offstyle="dark" data-style="border" data-size="xs" name="site_survey" value="1" @checked($pipeline->site_survey == 1) disabled>
                       </td>
                       <td>
                           {{ $pipeline->comments }}
@@ -107,11 +110,9 @@
                       <td>
                           {{ $pipeline->created_at ? \Carbon\Carbon::parse($pipeline->created_at)->format("m/d/y") : ''  }}
                       </td>                                      
-                      <td class="project-actions text-center">
-                          <a class="btn btn-primary btn-sm" href="#"> 
-                              <i class="fas fa-edit">
-                              </i>
-                              Edit
+                      <td class="project-actions">
+                          <a type="button" href="{{ route('edit.pipeline', ['id' => $pipeline->id]) }}" class="btn btn-tool" title="Edit this pipeline">
+                            <i class="fas fa-edit"></i>
                           </a>
                       </td>
                   </tr>                

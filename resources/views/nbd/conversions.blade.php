@@ -21,8 +21,12 @@
             <div class="info-box mb-3">
               <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-calendar-alt"></i></span>
               <div class="info-box-content">
-                <span class="info-box-text">Conversions</span>
-                <span class="info-box-number">0</span>
+                <span class="info-box-text">Opportunity Volume</span>
+                <span class="info-box-number">
+                          @if(!empty($opportunityvolume ))
+                          $
+                          @endif
+                      {{ $opportunityvolume !== null ? number_format($opportunityvolume, 0)  : '' }}</span>
               </div>
             </div>
           </div>
@@ -80,6 +84,7 @@
                           Created
                       </th>
                       <th>
+                          Edit
                       </th>
                   </tr>
               </thead>
@@ -93,7 +98,11 @@
                           {{ $conversion->supplier_converted_from }} 
                       </td>
                       <td>
-                          {{ $conversion->annual_opp_volume }}
+                          @if(!empty($conversion->annual_opp_volume))
+                          $
+                          @endif
+
+                          {{ $conversion->annual_opp_volume !== null ? number_format($conversion->annual_opp_volume, 0)  : '' }}
                       </td>
                       <td>
                           {{ $conversion->supplier_contact_name }}
@@ -110,11 +119,9 @@
                       <td>
                           {{ $conversion->created_at ? \Carbon\Carbon::parse($conversion->created_at)->format("m/d/y") : ''  }}
                       </td>                                      
-                      <td class="project-actions text-center">
-                          <a class="btn btn-primary btn-sm" href="#"> 
-                              <i class="fas fa-edit">
-                              </i>
-                              Edit
+                      <td class="project-actions">
+                          <a type="button" href="{{ route('edit.conversion', ['id' => $conversion->id]) }}" class="btn btn-tool" title="Edit this conversion">
+                            <i class="fas fa-edit"></i>
                           </a>
                       </td>
                   </tr>                
