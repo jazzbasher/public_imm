@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NBDController;
+use App\Http\Controllers\AdminNBDController;
 use App\Http\Controllers\Admin\UserController;
 
 Auth::routes(['register' => false]);
@@ -10,6 +11,9 @@ Auth::routes(['register' => false]);
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/users/create', [UserController::class, 'create'])->name('admin.users.create');
     Route::post('/admin/users', [UserController::class, 'store'])->name('admin.users.store');
+
+    Route::get('/admin/nbd/dashboard', [AdminNBDController::class, 'nbddashboard'])->name('admin.nbd.dashboard');
+
 });
 
 

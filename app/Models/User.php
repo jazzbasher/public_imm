@@ -52,4 +52,30 @@ class User extends Authenticatable
         return (bool) $this->is_admin; 
     }
 
+    public function newcustomerleads()
+    {
+        return $this->hasMany(NewCustomerLeads::class, 'user_id', 'id');
+    }
+
+    public function newopps()
+    {
+        return $this->hasMany(NewOpportunities::class, 'user_id', 'id');
+    }
+
+    public function jointcalls()
+    {
+        return $this->hasMany(JointCalls::class, 'user_id', 'id');
+    }
+
+    public function conversions()
+    {
+        return $this->hasMany(Conversions::class, 'user_id', 'id');
+    }
+
+    public function pipelines()
+    {
+        return $this->hasMany(VendingPipeline::class, 'user_id', 'id');
+    }
+
+
 }

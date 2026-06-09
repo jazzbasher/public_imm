@@ -359,7 +359,16 @@ return [
             ],
 
         ],
-
+        ['header' => 'ADMIN',
+          'can'   => 'admin' 
+        ],
+        [
+        'text' => 'NDB Dashboard',
+        'url'  => 'admin/nbd/dashboard',
+        'icon' => 'fas fa-user-lock',
+        'icon_color' => 'cyan',
+        'can'  => 'admin', // This locks the item
+        ],
         
         // ['header' => 'account_settings'],
         // [
