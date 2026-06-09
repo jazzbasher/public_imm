@@ -434,7 +434,7 @@ class NBDController extends Controller
          $updatelead = NewCustomerLeads::find($id);
          $updatelead->update($request->all());
 
-        return redirect()->route('nbd.newleads')->with('success','New Lead Updated.');
+        return redirect()->route('nbd.newleads')->with('success','New Lead Updated!');
     }
 
 
@@ -467,7 +467,7 @@ class NBDController extends Controller
          $updateopportunity = NewOpportunities::find($id);
          $updateopportunity->update($request->all());
 
-        return redirect()->route('nbd.newopportunities')->with('success','New Opportunity Updated.');
+        return redirect()->route('nbd.newopportunities')->with('success','New Opportunity Updated!');
 
     }
 
@@ -487,7 +487,7 @@ class NBDController extends Controller
         $updatecall = JointCalls::find($id);
         $updatecall->update($request->all());
 
-        return redirect()->route('nbd.jointcalls')->with('success','Joint Call Updated.');
+        return redirect()->route('nbd.jointcalls')->with('success','Joint Call Updated!');
     }
 
 
@@ -508,7 +508,7 @@ class NBDController extends Controller
         $updateconversion = Conversions::find($id);
         $updateconversion->update($request->all());
 
-        return redirect()->route('nbd.conversions')->with('success','Conversion Updated.');
+        return redirect()->route('nbd.conversions')->with('success','Conversion Updated!');
 
     }
 
@@ -539,7 +539,7 @@ class NBDController extends Controller
         $updatepipeline = VendingPipeline::find($id);
         $updatepipeline->update($request->all());
 
-        return redirect()->route('nbd.vendingpipeline')->with('success','Pipeline Updated.');
+        return redirect()->route('nbd.vendingpipeline')->with('success','Pipeline Updated!');
 
     }
 

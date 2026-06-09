@@ -3,6 +3,11 @@
 @section('subtitle', 'NBD Conversion')
 
 @section('content')
+@if (session()->has('success'))
+    <div id="flash-message" class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
     <!-- Main content -->
     <section class="content">
       <div class="card">
@@ -141,4 +146,5 @@
 
     @push('js')
     <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+    <script src="{{ asset('js/flash-remove.js') }}"></script>
     @endpush
