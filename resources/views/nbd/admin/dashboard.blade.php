@@ -108,7 +108,7 @@
 
                         @foreach($userleads as $userlead)
                         <tr class="align-middle">
-                          <td>{{ $userlead->name }}</td>
+                          <td><a href="{{ route('sales.user', ['id' => $userlead->id]) }}" class="text-reset">{{ $userlead->name }}</a></td>
                           <td>{{ $userlead->newcustomerleads_count }}</td>
                           <td>{{ $userlead->newopps_count }}</td>
                           <td>{{ $userlead->jointcalls_count }}</td>

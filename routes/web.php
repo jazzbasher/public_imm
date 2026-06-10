@@ -14,6 +14,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::get('/admin/nbd/dashboard', [AdminNBDController::class, 'nbddashboard'])->name('admin.nbd.dashboard');
 
+    Route::get('/admin/sales/{id}', [AdminNBDController::class, 'usersales'])->name('sales.user');
+
 });
 
 
