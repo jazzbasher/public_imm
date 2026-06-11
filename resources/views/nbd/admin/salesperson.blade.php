@@ -21,6 +21,11 @@
         {{ session('success') }} 
     </div>
 @endif
+@if (session()->has('error'))
+    <div id="flash-message" class="alert alert-danger">
+        {{ session('error') }} 
+    </div>
+@endif
 
 @section('plugins.Datatables', true)
 

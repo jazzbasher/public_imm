@@ -8,6 +8,11 @@
         {{ session('success') }}
     </div>
 @endif
+@if (session()->has('error'))
+    <div id="flash-message" class="alert alert-danger">
+        {{ session('error') }} 
+    </div>
+@endif
     <!-- Main content -->
     <section class="content">
       <div class="card">

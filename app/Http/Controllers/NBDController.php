@@ -47,7 +47,7 @@ class NBDController extends Controller
         $countquotes = NewOpportunities::where('user_id', $loggeduser)->where('active', 1)->where('quote', 1)->count();
         $countclose = NewOpportunities::where('user_id', $loggeduser)->where('active', 1)->whereDate('close_date', '>=', today())->count();
 
-        $totalvalue = NewOpportunities::where('active', 1)->sum('projected_value');
+        $totalvalue = NewOpportunities::where('user_id', $loggeduser)->where('active', 1)->sum('projected_value');
         
         return view('nbd.newopportunities', compact('newopportunity', 'countquotes', 'countclose', 'totalvalue'));
     }
@@ -72,7 +72,7 @@ class NBDController extends Controller
 
         $conversions = Conversions::where('user_id', $loggeduser)->where('active', 1)->orderBy('created_at', 'desc')->get();
 
-        $opportunityvolume = Conversions::where('active', 1)->sum('annual_opp_volume');
+        $opportunityvolume = Conversions::where('user_id', $loggeduser)->where('active', 1)->sum('annual_opp_volume');
 
         
         return view('nbd.conversions', compact('conversions', 'opportunityvolume'));
@@ -99,7 +99,7 @@ class NBDController extends Controller
 
         $pipelines = VendingPipeline::where('user_id', $loggeduser)->where('active', 1)->orderBy('created_at', 'desc')->get();
 
-        $totalrevenue = VendingPipeline::where('active', 1)->sum('estimated_spend');
+        $totalrevenue = VendingPipeline::where('user_id', $loggeduser)->where('active', 1)->sum('estimated_spend');
 
         
         return view('nbd.vendingpipeline', compact('pipelines', 'totalrevenue'));
@@ -346,19 +346,51 @@ class NBDController extends Controller
     public function editnewlead($id)
     {
         $loggeduser = Auth::id();
-        $leads = NewCustomerLeads::where('id', $id)->where('user_id', $loggeduser)->where('active', 1)->get();
 
-        return view('nbd.edit.editlead', compact('leads', 'id'));
 
+        if (Auth::user()->is_sales && ! Auth::user()->is_admin) {
+         
+            $leads = NewCustomerLeads::where('id', $id)->where('user_id', $loggeduser)->where('active', 1)->get();
+
+        } elseif (Auth::user()->is_admin) {
+
+            $leads = NewCustomerLeads::where('id', $id)->where('active', 1)->get();
+        }
+        
+        if($leads->isNotEmpty()) {
+
+            return view('nbd.edit.editlead', compact('leads', 'id'));
+
+        } else {
+
+            return redirect()->route('nbd.newleads')->with('error','Not Authorized or Not Found');
+        }
+        
     }
 
 
     public function editopportunity($id)
     {
         $loggeduser = Auth::id();
-        $opportunities = NewOpportunities::where('id', $id)->where('user_id', $loggeduser)->where('active', 1)->get();
 
-        return view('nbd.edit.editopportunity', compact('opportunities', 'id'));
+
+        if (Auth::user()->is_sales && ! Auth::user()->is_admin) {
+
+            $opportunities = NewOpportunities::where('id', $id)->where('user_id', $loggeduser)->where('active', 1)->get();
+
+        } elseif (Auth::user()->is_admin) {
+
+            $opportunities = NewOpportunities::where('id', $id)->where('active', 1)->get();
+        }
+
+        if($opportunities->isNotEmpty()) {
+
+            return view('nbd.edit.editopportunity', compact('opportunities', 'id'));
+
+        } else {
+
+            return redirect()->route('nbd.newopportunities')->with('error','Not Authorized or Not Found');
+        }
 
     }
 
@@ -366,9 +398,25 @@ class NBDController extends Controller
     public function editjointcall($id)
     {
         $loggeduser = Auth::id();
-        $jointcalls = JointCalls::where('id', $id)->where('user_id', $loggeduser)->where('active', 1)->get();
 
-        return view('nbd.edit.editjointcall', compact('jointcalls', 'id'));
+        if (Auth::user()->is_sales && ! Auth::user()->is_admin) {
+
+            $jointcalls = JointCalls::where('id', $id)->where('user_id', $loggeduser)->where('active', 1)->get();
+
+        } elseif (Auth::user()->is_admin) {
+
+            $jointcalls = JointCalls::where('id', $id)->where('active', 1)->get();
+
+        }
+
+        if($jointcalls->isNotEmpty()) {
+
+            return view('nbd.edit.editjointcall', compact('jointcalls', 'id'));
+
+        } else {
+
+            return redirect()->route('nbd.jointcalls')->with('error','Not Authorized or Not Found');
+        }
 
     }
 
@@ -376,9 +424,25 @@ class NBDController extends Controller
     public function editconversion($id)
     {
         $loggeduser = Auth::id();
-        $conversions = Conversions::where('id', $id)->where('user_id', $loggeduser)->where('active', 1)->get();
 
-        return view('nbd.edit.editconversion', compact('conversions', 'id'));
+        if (Auth::user()->is_sales && ! Auth::user()->is_admin) {
+
+            $conversions = Conversions::where('id', $id)->where('user_id', $loggeduser)->where('active', 1)->get();
+
+        } elseif (Auth::user()->is_admin) {
+
+            $conversions = Conversions::where('id', $id)->where('active', 1)->get();
+
+        }
+
+        if($conversions->isNotEmpty()) {
+
+            return view('nbd.edit.editconversion', compact('conversions', 'id'));
+
+        } else {
+
+            return redirect()->route('nbd.conversions')->with('error','Not Authorized or Not Found');
+        }
 
     }
 
@@ -386,9 +450,26 @@ class NBDController extends Controller
     public function editpipeline($id)
     {
         $loggeduser = Auth::id();
-        $pipelines = VendingPipeline::where('id', $id)->where('user_id', $loggeduser)->where('active', 1)->get();
 
-        return view('nbd.edit.editpipeline', compact('pipelines', 'id'));
+        if (Auth::user()->is_sales && ! Auth::user()->is_admin) {
+
+            $pipelines = VendingPipeline::where('id', $id)->where('user_id', $loggeduser)->where('active', 1)->get();
+
+        } elseif (Auth::user()->is_admin) {
+
+            $pipelines = VendingPipeline::where('id', $id)->where('active', 1)->get();
+
+        }
+
+        if($pipelines->isNotEmpty()) {
+
+            return view('nbd.edit.editpipeline', compact('pipelines', 'id'));
+
+        } else {
+
+            return redirect()->route('nbd.vendingpipeline')->with('error','Not Authorized or Not Found');
+        }
+
 
     }
 
@@ -422,7 +503,6 @@ class NBDController extends Controller
          $request->validate([
             'new_lead' => 'max:255',
             'address' => 'max:255|nullable',
-            'user_id' => 'required',
             'date_planned' => 'date_format:Y-m-d|nullable',
             'contact_made' => 'nullable',
             'contactname' => 'max:255|nullable',
@@ -455,7 +535,6 @@ class NBDController extends Controller
          $request->validate([
             'customer' => 'max:255',
             'interest' => 'max:255|nullable',
-            'user_id' => 'required',
             'close_date' => 'date_format:Y-m-d|nullable',
             'projected_value' => 'nullable',
             'confidence' => 'nullable',
@@ -479,7 +558,6 @@ class NBDController extends Controller
             'customer_name' => 'max:255|nullable',
             'vendor' => 'max:255|nullable',
             'vendor_rep' => 'max:255|nullable',
-            'user_id' => 'required',
             'date_worked' => 'date_format:Y-m-d|nullable',
             'comments' => 'max:500|nullable'
         ]);
@@ -501,7 +579,6 @@ class NBDController extends Controller
             'supplier_contact_name' => 'max:255|nullable',
             'end_user' => 'max:255|nullable',
             'product_converted_to' => 'max:255|nullable',
-            'user_id' => 'required',
             'comments' => 'max:500|nullable'
         ]);
 
@@ -532,7 +609,6 @@ class NBDController extends Controller
             'customer' => 'max:255|nullable',
             'address' => 'max:255|nullable',
             'estimated_spend' => 'nullable',
-            'user_id' => 'required',
             'comments' => 'max:500|nullable'
         ]);
 
@@ -544,6 +620,148 @@ class NBDController extends Controller
     }
 
 
+
+    /**********************************************************************************************
+     * ********************************************************************************************
+     * ***********************     Soft Delete By Admin Only       ********************************
+     * ********************************************************************************************
+     * *******************************************************************************************/
+
+
+    public function sdeletelead(Request $request)
+    {
+        if(Auth::user()->is_admin)
+        {
+            if($request->id)
+            {
+                $leadid = $request->id;
+                $sdeletelead = NewCustomerLeads::findOrFail($leadid);
+                $sdeletelead->active = 0;
+                $sdeletelead->save();
+
+                return redirect()->back()->with('success', 'Lead Deleted!');
+            
+            } else {
+
+                return redirect()->back()->with('error', 'Error Occurred. Record not found');
+            }
+
+        } else {
+
+            return redirect()->back()->with('error', 'You are not authorized.');
+        }
+
+    }
+
+
+
+
+    public function sdeleteopp(Request $request)
+    {
+        if(Auth::user()->is_admin)
+        {
+            if($request->id)
+            {
+                $oppid = $request->id;
+                $sdeleteopp = NewOpportunities::findOrFail($oppid);
+                $sdeleteopp->active = 0;
+                $sdeleteopp->save();
+
+                return redirect()->back()->with('success', 'Opportunity Deleted!');
+            
+            } else {
+
+                return redirect()->back()->with('error', 'Error Occurred. Record not found');
+            }
+
+        } else {
+
+            return redirect()->back()->with('error', 'You are not authorized.');
+        }
+
+    }
+
+
+
+    public function sdeletecall(Request $request)
+    {
+        if(Auth::user()->is_admin)
+        {
+            if($request->id)
+            {
+                $callid = $request->id;
+                $sdeletecall = JointCalls::findOrFail($callid);
+                $sdeletecall->active = 0;
+                $sdeletecall->save();
+
+                return redirect()->back()->with('success', 'Joint Call Deleted!');
+            
+            } else {
+
+                return redirect()->back()->with('error', 'Error Occurred. Record not found');
+            }
+
+        } else {
+
+            return redirect()->back()->with('error', 'You are not authorized.');
+        }
+
+    }
+
+
+
+    public function sdeleteconversion(Request $request)
+    {
+        if(Auth::user()->is_admin)
+        {
+            if($request->id)
+            {
+                $conversionid = $request->id;
+                $sdeleteconversion = Conversions::findOrFail($conversionid);
+                $sdeleteconversion->active = 0;
+                $sdeleteconversion->save();
+
+                return redirect()->back()->with('success', 'Conversion Deleted!');
+            
+            } else {
+
+                return redirect()->back()->with('error', 'Error Occurred. Record not found');
+            }
+
+        } else {
+
+            return redirect()->back()->with('error', 'You are not authorized.');
+        }
+
+    }
+
+
+
+
+    public function sdeletepipeline(Request $request)
+    {
+        if(Auth::user()->is_admin)
+        {
+            if($request->id)
+            {
+                $pipelineid = $request->id;
+                $sdeletepipeline = VendingPipeline::findOrFail($pipelineid);
+                $sdeletepipeline->active = 0;
+                $sdeletepipeline->save();
+
+                return redirect()->back()->with('success', 'Vending Pipeline Deleted!');
+            
+            } else {
+
+                return redirect()->back()->with('error', 'Error Occurred. Record not found');
+            }
+
+        } else {
+
+            return redirect()->back()->with('error', 'You are not authorized.');
+        }
+
+    }
 
 
 

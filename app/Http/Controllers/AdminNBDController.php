@@ -105,6 +105,12 @@ class AdminNBDController extends Controller
                 Carbon::parse($lead->created_at)->format('m-d-y'),
                 '<a style="color: #9999B0;" href="/nbd/newleads/edit/' . $lead->id . '"><i class="fas fa-pencil-alt"/></a>',
 
+                '<form action="/admin/destroylead" method="POST" onsubmit="return confirm(\'This action will delete this lead.  Are you sure?\');">' .
+                '<input type="hidden" name="_token" value="' . csrf_token() . '">' .
+                '<input type="hidden" name="id" value ="' . $lead->id . '">' .
+                '<button type="submit" class="btn btn-link"><i style="color: #C78B8B" class="fas fa-trash-alt"/></button>' .
+                '</form>',
+
                 ];
             }
 
@@ -120,7 +126,13 @@ class AdminNBDController extends Controller
                     $opps->rep,
                     $opps->comments,
                     Carbon::parse($opps->created_at)->format('m-d-y'),
-                     '<a style="color: #9999B0;" href="/nbd/newopportunities/edit/' . $opps->id . '"><i class="fas fa-pencil-alt"/></a>',
+                    '<a style="color: #9999B0;" href="/nbd/newopportunities/edit/' . $opps->id . '"><i class="fas fa-pencil-alt"/></a>',
+
+                    '<form action="/admin/destroyopportunity" method="POST" onsubmit="return confirm(\'This action will delete this opportunity.  Are you sure?\');">' .
+                    '<input type="hidden" name="_token" value="' . csrf_token() . '">' .
+                    '<input type="hidden" name="id" value ="' . $opps->id . '">' .
+                    '<button type="submit" class="btn btn-link"><i style="color: #C78B8B" class="fas fa-trash-alt"/></button>' .
+                    '</form>',
                 ];
             }
 
@@ -134,6 +146,12 @@ class AdminNBDController extends Controller
                     $calls->comments,
                     Carbon::parse($calls->created_at)->format('m-d-y'),
                     '<a style="color: #9999B0;" href="/nbd/jointcalls/edit/' . $calls->id . '"><i class="fas fa-pencil-alt"/></a>',
+
+                    '<form action="/admin/destroyjointcall" method="POST" onsubmit="return confirm(\'This action will delete this call.  Are you sure?\');">' .
+                    '<input type="hidden" name="_token" value="' . csrf_token() . '">' .
+                    '<input type="hidden" name="id" value ="' . $calls->id . '">' .
+                    '<button type="submit" class="btn btn-link"><i style="color: #C78B8B" class="fas fa-trash-alt"/></button>' .
+                    '</form>',
                 ];
             }
 
@@ -149,6 +167,12 @@ class AdminNBDController extends Controller
                     $conversion->comments,
                     Carbon::parse($conversion->created_at)->format('m-d-y'),
                     '<a style="color: #9999B0;" href="/nbd/conversions/edit/' . $conversion->id . '"><i class="fas fa-pencil-alt"/></a>',
+
+                    '<form action="/admin/destroyconversion" method="POST" onsubmit="return confirm(\'This action will delete this conversion.  Are you sure?\');">' .
+                    '<input type="hidden" name="_token" value="' . csrf_token() . '">' .
+                    '<input type="hidden" name="id" value ="' . $conversion->id . '">' .
+                    '<button type="submit" class="btn btn-link"><i style="color: #C78B8B" class="fas fa-trash-alt"/></button>' .
+                    '</form>',
                 ];
             }
 
@@ -162,6 +186,12 @@ class AdminNBDController extends Controller
                     $pipeline->comments,
                     Carbon::parse($pipeline->created_at)->format('m-d-y'),
                     '<a style="color: #9999B0;" href="/nbd/vendingpipeline/edit/' . $pipeline->id . '"><i class="fas fa-pencil-alt"/></a>',
+
+                    '<form action="/admin/destroypipeline" method="POST" onsubmit="return confirm(\'This action will delete this vending pipeline.  Are you sure?\');">' .
+                    '<input type="hidden" name="_token" value="' . csrf_token() . '">' .
+                    '<input type="hidden" name="id" value ="' . $pipeline->id . '">' .
+                    '<button type="submit" class="btn btn-link"><i style="color: #C78B8B" class="fas fa-trash-alt"/></button>' .
+                    '</form>',
                 ];
             }
 
@@ -180,7 +210,7 @@ class AdminNBDController extends Controller
             'responsive' => true,
             'paging' => false,
             'info'  => false,
-            'columns' => [['orderable' => false], ['orderable' => false], null, ['orderable' => false], ['orderable' => false], ['orderable' => false], ['orderable' => false], null, ['className' => 'dt-center editor-edit', 'defaultContent' => '<a href="#" style="color: #9999B0;"><i class="fas fa-pencil-alt"/></a>', 'orderable' => false], ['data' => null, 'className' => 'dt-center editor-edit', 'defaultContent' => '<a href="#" style="color: #C78B8B;"><i class="fas fa-trash-alt"/></a>', 'orderable' => false]],
+            'columns' => [['orderable' => false], ['orderable' => false], null, ['orderable' => false], ['orderable' => false], ['orderable' => false], ['orderable' => false], null, ['className' => 'dt-center editor-edit', 'defaultContent' => '<a href="#" style="color: #9999B0;"><i class="fas fa-pencil-alt"/></a>', 'orderable' => false], ['className' => 'dt-center editor-edit', 'defaultContent' => '<a href="#" style="color: #C78B8B;"><i class="fas fa-trash-alt"/></a>', 'orderable' => false]],
             'buttons' =>  [
                 [ 
                     'extend' => 'excelHtml5',
@@ -204,7 +234,7 @@ class AdminNBDController extends Controller
             'responsive' => true,
             'paging' => false,
             'info'  => false,
-            'columns' => [['orderable' => false], ['orderable' => false], ['orderable' => false], ['orderable' => false], null, ['orderable' => false], ['orderable' => false], ['orderable' => false], null, ['className' => 'dt-center editor-edit', 'defaultContent' => '<i class="fas fa-pencil-alt"/>', 'orderable' => false], ['data' => null, 'className' => 'dt-center editor-edit', 'defaultContent' => '<i class="fas fa-trash-alt"/>', 'orderable' => false]],
+            'columns' => [['orderable' => false], ['orderable' => false], ['orderable' => false], ['orderable' => false], null, ['orderable' => false], ['orderable' => false], ['orderable' => false], null, ['className' => 'dt-center editor-edit', 'defaultContent' => '<i class="fas fa-pencil-alt"/>', 'orderable' => false], ['className' => 'dt-center editor-edit', 'defaultContent' => '<i class="fas fa-trash-alt"/>', 'orderable' => false]],
             'buttons' =>  [
                 [ 
                     'extend' => 'excelHtml5',
@@ -229,7 +259,7 @@ class AdminNBDController extends Controller
             'responsive' => true,
             'paging' => false,
             'info'  => false,
-            'columns' => [['orderable' => false], ['orderable' => false], ['orderable' => false], null, ['orderable' => false], null, ['className' => 'dt-center editor-edit', 'defaultContent' => '<i class="fas fa-pencil-alt"/>', 'orderable' => false], ['data' => null, 'className' => 'dt-center editor-edit', 'defaultContent' => '<i class="fas fa-trash-alt"/>', 'orderable' => false]],
+            'columns' => [['orderable' => false], ['orderable' => false], ['orderable' => false], null, ['orderable' => false], null, ['className' => 'dt-center editor-edit', 'defaultContent' => '<i class="fas fa-pencil-alt"/>', 'orderable' => false], ['className' => 'dt-center editor-edit', 'defaultContent' => '<i class="fas fa-trash-alt"/>', 'orderable' => false]],
             'buttons' =>  [
                 [ 
                     'extend' => 'excelHtml5',
@@ -255,7 +285,7 @@ class AdminNBDController extends Controller
             'responsive' => true,
             'paging' => false,
             'info'  => false,
-            'columns' => [['orderable' => false], ['orderable' => false], ['orderable' => false], ['orderable' => false], ['orderable' => false], ['orderable' => false], ['orderable' => false], null, ['className' => 'dt-center editor-edit', 'defaultContent' => '<i class="fas fa-pencil-alt"/>', 'orderable' => false], ['data' => null, 'className' => 'dt-center editor-edit', 'defaultContent' => '<i class="fas fa-trash-alt"/>', 'orderable' => false]],
+            'columns' => [['orderable' => false], ['orderable' => false], ['orderable' => false], ['orderable' => false], ['orderable' => false], ['orderable' => false], ['orderable' => false], null, ['className' => 'dt-center editor-edit', 'defaultContent' => '<i class="fas fa-pencil-alt"/>', 'orderable' => false], ['className' => 'dt-center editor-edit', 'defaultContent' => '<i class="fas fa-trash-alt"/>', 'orderable' => false]],
             'buttons' =>  [
                 [ 
                     'extend' => 'excelHtml5',
@@ -281,7 +311,7 @@ class AdminNBDController extends Controller
             'responsive' => true,
             'paging' => false,
             'info'  => false,
-            'columns' => [['orderable' => false], ['orderable' => false], ['orderable' => false], ['orderable' => false], ['orderable' => false], null, ['className' => 'dt-center editor-edit', 'defaultContent' => '<i class="fas fa-pencil-alt"/>', 'orderable' => false], ['data' => null, 'className' => 'dt-center editor-edit', 'defaultContent' => '<i class="fas fa-trash-alt"/>', 'orderable' => false]],
+            'columns' => [['orderable' => false], ['orderable' => false], ['orderable' => false], ['orderable' => false], ['orderable' => false], null, ['className' => 'dt-center editor-edit', 'defaultContent' => '<i class="fas fa-pencil-alt"/>', 'orderable' => false], ['className' => 'dt-center editor-edit', 'defaultContent' => '<i class="fas fa-trash-alt"/>', 'orderable' => false]],
             'buttons' =>  [
                 [ 
                     'extend' => 'excelHtml5',

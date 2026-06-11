@@ -367,6 +367,7 @@ return [
         'url'  => 'admin/nbd/dashboard',
         'icon' => 'fas fa-user-lock',
         'icon_color' => 'cyan',
+        'active'  => request()->routeIs('admin.ndb*') || request()->is('admin/ndb/*'),
         'can'  => 'admin', // This locks the item
         ],
         

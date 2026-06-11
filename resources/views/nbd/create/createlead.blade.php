@@ -65,7 +65,7 @@
                       <input type="hidden" name="user_id" value="{{ auth()->id() }}">
                       <br>
                       <a href="{{ url()->previous() }}" class="btn btn-secondary mr-5">Cancel</a>
-                      <button type="submit" class="btn btn-primary">Enter</button>
+                      <button type="submit" class="btn btn-primary">Create New Lead</button>
                     </form>
                   </div>
                 </div>
