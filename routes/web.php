@@ -5,7 +5,7 @@ use App\Http\Controllers\NBDController;
 use App\Http\Controllers\AdminNBDController;
 use App\Http\Controllers\Admin\UserController;
 
-Auth::routes(['register' => false]);
+Auth::routes(['register' => false, 'reset' => false,]);
 
 
 Route::middleware(['auth', 'admin'])->group(function () {
@@ -30,6 +30,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 
 Route::middleware(['auth'])->group(function () {
+
 Route::get('/', function () {
     return redirect('nbd/newleads');
 });
