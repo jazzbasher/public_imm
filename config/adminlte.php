@@ -322,7 +322,7 @@ return [
         // ],
         ['header' => 'SALES'],
         [
-            'text' => 'NDB',
+            'text' => 'NBD',
             'icon' => 'fas fa-lightbulb',
             'icon_color' => 'yellow',
             'submenu' => [
@@ -363,11 +363,11 @@ return [
           'can'   => 'admin' 
         ],
         [
-        'text' => 'NDB Dashboard',
+        'text' => 'NBD Dashboard',
         'url'  => 'admin/nbd/dashboard',
         'icon' => 'fas fa-user-lock',
         'icon_color' => 'cyan',
-        'active'  => request()->routeIs('admin.ndb*') || request()->is('admin/ndb/*'),
+        'active'  => request()->routeIs('admin.nbd*') || request()->is('admin/nbd/*'),
         'can'  => 'admin', // This locks the item
         ],
         
@@ -438,7 +438,7 @@ return [
 
     'plugins' => [
         'Datatables' => [
-            'active' => true,
+            'active' => false,
             'files' => [
                 [
                     'type' => 'js',
@@ -514,11 +514,11 @@ return [
             ],
         ],
         'Chartjs' => [
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => '//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js',
                 ],
             ],

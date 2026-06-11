@@ -10,8 +10,8 @@ class NewCustomerLeads extends Model
     protected $fillable = ['new_lead', 'address', 'date_planned', 'contact_made', 'contactname', 'email', 'comments', 'user_id'];
 
    
-    public function user(): BelongsTo
+    public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

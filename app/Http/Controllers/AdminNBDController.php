@@ -15,6 +15,14 @@ use Carbon\Carbon;
 class AdminNBDController extends Controller
 {
 
+
+    /**********************************************************************************************
+     * ********************************************************************************************
+     * ***********************     Admin Dash Panel     *******************************************
+     * ********************************************************************************************
+     * *******************************************************************************************/
+
+
     public function nbddashboard()
     {
         $leadscount = NewCustomerLeads::where('active', 1)->count();
@@ -45,9 +53,257 @@ class AdminNBDController extends Controller
          return view('nbd.admin.dashboard', compact('leadscount', 'oppcount', 'pipelinecount', 'sumtotal', 'userleads'));
     }
 
-    public function yesNo($value){
-    return $value ? 'Yes' : 'No';
-}
+
+
+
+    /**********************************************************************************************
+     * ********************************************************************************************
+     * *********************     Custom Boolean Return Function     *******************************
+     * ********************************************************************************************
+     * *******************************************************************************************/
+
+
+    public function yesNo($value)
+    {
+        return $value ? 'Yes' : 'No';
+    }
+
+
+
+    /**********************************************************************************************
+     * ********************************************************************************************
+     * *********************         Admin Dash Data By Category      *****************************
+     * ********************************************************************************************
+     * *******************************************************************************************/
+
+
+    public function adminleads()
+    {
+        $customerleads = NewCustomerLeads::where('active', 1)->with('user')->get();
+
+        $userleads = User::where('is_sales', 1)->withCount(['newcustomerleads' => function ($query) {
+            $query->where('active', 1);
+        }])->get();
+
+        $userleadscontact = User::where('is_sales', 1)->withCount(['newcustomerleads' => function ($query) {
+            $query->where('active', 1)->where('contact_made', 1);
+        }])->get();
+
+
+        $datechart = NewCustomerLeads::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
+            ->whereYear('created_at', Carbon::now()->year)
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('count', 'month') // Key is month number (1-12), value is the count
+            ->toArray();
+
+
+        $pieleads = $userleads->pluck('newcustomerleads_count', 'name');
+        $barcontacts = $userleadscontact->pluck('newcustomerleads_count', 'name');
+
+
+
+        $monthlabels = [];
+        $monthdata = [];
+
+         $currentMonth = Carbon::now()->month;
+    for ($m = 1; $m <= $currentMonth; $m++) {
+        // Format the month index to a short name string (e.g., Jan, Feb)
+        $monthlabels[] = Carbon::create()->month($m)->format('M');
+        
+        // Use the count from database, or fallback to 0 if the month had no entries
+        $monthdata[] = $datechart[$m] ?? 0;
+    }
+
+
+
+        $userlabel = [];
+        $leadsdata = [];
+        $usercontactlabel = [];
+        $contactdata = [];
+
+
+        foreach($pieleads as $k => $v){
+        $userlabel[] = $k;
+        $leadsdata[] = $v;
+        }
+
+
+        foreach($barcontacts as $k => $v){
+        $usercontactlabel[] = strtok($k, " ");
+        $contactdata[] = $v;
+        }
+
+        $heads = ['Sales','Lead', 'Address', 'Planned', 'Contact?', 'Name', 'email', 'Notes', 'Created', '', ''];
+        $data = [];
+
+        foreach($customerleads as $lead) {
+
+            $data[] = [
+                strtok($lead->user->name, " "),
+                $lead->new_lead,
+                $lead->address,
+                Carbon::parse($lead->date_planned)->format('m-d-y'),
+                $this->yesNo($lead->contact_made),
+                $lead->contactname,
+                $lead->email,
+                $lead->comments,
+                Carbon::parse($lead->created_at)->format('m-d-y'),
+                '<a class=btn btn-link" style="color: #9999B0;" href="/nbd/newleads/edit/' . $lead->id . '"><i class="fas fa-pencil-alt"/></a>',
+
+                '<form action="/admin/destroylead" method="POST" onsubmit="return confirm(\'This action will delete this lead.  Are you sure?\');">' .
+                '<input type="hidden" name="_token" value="' . csrf_token() . '">' .
+                '<input type="hidden" name="id" value ="' . $lead->id . '">' .
+                '<button type="submit" class="btn btn-link"><i style="color: #C78B8B" class="fas fa-trash-alt"/></button>' .
+                '</form>',
+
+                ];
+            }
+
+
+            $config = [
+            'data' => $data,
+            'order' => [[0, 'asc'],[8, 'desc']],
+            'responsive' => true,
+            'paging' => false,
+            'info'  => false,
+            'language' => ['emptyTable' => "No Customer Leads"],
+            'columns' => [null,['orderable' => false], ['orderable' => false], null, ['orderable' => false], ['orderable' => false], ['orderable' => false], ['orderable' => false], null, ['className' => 'dt-center editor-edit', 'defaultContent' => '<a href="#" style="color: #9999B0;"><i class="fas fa-pencil-alt"/></a>', 'orderable' => false], ['className' => 'dt-center editor-edit', 'defaultContent' => '<a href="#" style="color: #C78B8B;"><i class="fas fa-trash-alt"/></a>', 'orderable' => false]],
+                'buttons' =>  [
+                        [ 
+                            'extend' => 'excelHtml5',
+                            'text' => '<i class="fas fa-file-excel"></i>',
+                            'className' => 'btn btn-success',
+                            'titleAttr' => 'Excel Export',
+                            'filename' => '-Leads-' . today()->format('y-m-d'), 
+                        ],
+                        [ 
+                            'extend' => 'print',
+                            'text' => '<i class="fas fa-print"></i>',
+                            'className' => 'btn btn-success',
+                            'titleAttr' => 'Print',
+                        ],
+                ]
+            ];
+
+
+        return view('nbd.admin.admincustomerleads', compact('heads', 'config', 'userlabel', 'leadsdata', 'usercontactlabel', 'contactdata', 'monthlabels', 'monthdata'));
+
+    }
+
+
+
+    public function adminopp()
+    {
+        $opps = NewOpportunities::where('active', 1)->with('user')->get();
+
+        $useropps = User::where('is_sales', 1)->withCount(['newopps' => function ($query) {
+            $query->where('active', 1);
+        }])->get();
+
+        $userquotes = User::where('is_sales', 1)->withCount(['newopps' => function ($query) {
+            $query->where('active', 1)->where('quote', 1);
+        }])->get();
+
+
+
+        $pieopps = $useropps->pluck('newopps_count', 'name');
+        $barquote = $userquotes->pluck('newopps_count', 'name');
+
+
+        $userlabel = [];
+        $oppsdata = [];
+        $userquotelabel = [];
+        $quotedata = [];
+
+
+        foreach($pieopps as $k => $v){
+        $userlabel[] = $k;
+        $oppsdata[] = $v;
+        }
+
+
+        foreach($barquote as $k => $v){
+        $userquotelabel[] = strtok($k, " ");
+        $quotedata[] = $v;
+        }
+
+
+
+        $heads = ['Sales','Customer', 'Interest', 'Quote?', 'Value', 'Projected', 'Convidence', 'Rep', 'Notes', 'Created', '', ''];
+        $data = [];
+
+
+        foreach($opps as $opp) {
+
+                $dataopps[] = [
+                    strtok($opp->user->name, " "),
+                    $opp->customer,
+                    $opp->interest,
+                    $this->yesNo($opp->quote),
+                    // $opp->projected_value !== null ? number_format($opps->projected_value,0) : '',
+                    '2',
+                    Carbon::parse($opp->close_date)->format('m-d-y'),
+                    $opp->confidence,
+                    $opp->rep,
+                    $opp->comments,
+                    Carbon::parse($opp->created_at)->format('m-d-y'),
+                    '<a  class=btn btn-link" style="color: #9999B0;" href="/nbd/newopportunities/edit/' . $opp->id . '"><i class="fas fa-pencil-alt"/></a>',
+
+                    '<form action="/admin/destroyopportunity" method="POST" onsubmit="return confirm(\'This action will delete this opportunity.  Are you sure?\');">' .
+                    '<input type="hidden" name="_token" value="' . csrf_token() . '">' .
+                    '<input type="hidden" name="id" value ="' . $opp->id . '">' .
+                    '<button type="submit" class="btn btn-link"><i style="color: #C78B8B" class="fas fa-trash-alt"/></button>' .
+                    '</form>',
+                ];
+            }
+
+
+            $oppsconfig = [
+            'data' => $dataopps,
+            'order' => [[8, 'desc']],
+            'responsive' => true,
+            'paging' => false,
+            'info'  => false,
+            'language' => ['emptyTable' => "No New Opportunties"],
+            'columns' => [['orderable' => false], ['orderable' => false], ['orderable' => false], ['orderable' => false], null, ['orderable' => false], ['orderable' => false], ['orderable' => false], null, ['className' => 'dt-center editor-edit', 'defaultContent' => '<i class="fas fa-pencil-alt"/>', 'orderable' => false], ['className' => 'dt-center editor-edit', 'defaultContent' => '<i class="fas fa-trash-alt"/>', 'orderable' => false]],
+            'buttons' =>  [
+                [ 
+                    'extend' => 'excelHtml5',
+                    'text' => '<i class="fas fa-file-excel"></i>',
+                    'className' => 'btn btn-success',
+                    'titleAttr' => 'Excel Export',
+                    'filename' => '-Opportunities-' . today()->format('y-m-d'), 
+                ],
+                [ 
+                    'extend' => 'print',
+                    'text' => '<i class="fas fa-print"></i>',
+                    'className' => 'btn btn-success',
+                    'titleAttr' => 'Print',
+                ],
+            ]
+        ];
+
+
+
+        return view('nbd.admin.adminopportunity', compact('heads', 'oppsconfig', 'userlabel', 'oppsdata', 'userquotelabel', 'quotedata'));
+
+
+
+
+
+    }
+
+
+
+
+    /**********************************************************************************************
+     * ********************************************************************************************
+     * *********************     Admin Dash Data By User/Salesperson  *****************************
+     * ********************************************************************************************
+     * *******************************************************************************************/
+
+
 
     public function usersales($id)
     {
@@ -103,7 +359,7 @@ class AdminNBDController extends Controller
                 $lead->email,
                 $lead->comments,
                 Carbon::parse($lead->created_at)->format('m-d-y'),
-                '<a style="color: #9999B0;" href="/nbd/newleads/edit/' . $lead->id . '"><i class="fas fa-pencil-alt"/></a>',
+                '<a  class=btn btn-link" style="color: #9999B0;" href="/nbd/newleads/edit/' . $lead->id . '"><i class="fas fa-pencil-alt"/></a>',
 
                 '<form action="/admin/destroylead" method="POST" onsubmit="return confirm(\'This action will delete this lead.  Are you sure?\');">' .
                 '<input type="hidden" name="_token" value="' . csrf_token() . '">' .
@@ -126,7 +382,7 @@ class AdminNBDController extends Controller
                     $opps->rep,
                     $opps->comments,
                     Carbon::parse($opps->created_at)->format('m-d-y'),
-                    '<a style="color: #9999B0;" href="/nbd/newopportunities/edit/' . $opps->id . '"><i class="fas fa-pencil-alt"/></a>',
+                    '<a  class=btn btn-link" style="color: #9999B0;" href="/nbd/newopportunities/edit/' . $opps->id . '"><i class="fas fa-pencil-alt"/></a>',
 
                     '<form action="/admin/destroyopportunity" method="POST" onsubmit="return confirm(\'This action will delete this opportunity.  Are you sure?\');">' .
                     '<input type="hidden" name="_token" value="' . csrf_token() . '">' .
@@ -145,7 +401,7 @@ class AdminNBDController extends Controller
                     Carbon::parse($calls->date_worked)->format('m-d-y'),
                     $calls->comments,
                     Carbon::parse($calls->created_at)->format('m-d-y'),
-                    '<a style="color: #9999B0;" href="/nbd/jointcalls/edit/' . $calls->id . '"><i class="fas fa-pencil-alt"/></a>',
+                    '<a  class=btn btn-link" style="color: #9999B0;" href="/nbd/jointcalls/edit/' . $calls->id . '"><i class="fas fa-pencil-alt"/></a>',
 
                     '<form action="/admin/destroyjointcall" method="POST" onsubmit="return confirm(\'This action will delete this call.  Are you sure?\');">' .
                     '<input type="hidden" name="_token" value="' . csrf_token() . '">' .
@@ -166,7 +422,7 @@ class AdminNBDController extends Controller
                     $conversion->product_converted_to,
                     $conversion->comments,
                     Carbon::parse($conversion->created_at)->format('m-d-y'),
-                    '<a style="color: #9999B0;" href="/nbd/conversions/edit/' . $conversion->id . '"><i class="fas fa-pencil-alt"/></a>',
+                    '<a  class=btn btn-link" style="color: #9999B0;" href="/nbd/conversions/edit/' . $conversion->id . '"><i class="fas fa-pencil-alt"/></a>',
 
                     '<form action="/admin/destroyconversion" method="POST" onsubmit="return confirm(\'This action will delete this conversion.  Are you sure?\');">' .
                     '<input type="hidden" name="_token" value="' . csrf_token() . '">' .
@@ -185,7 +441,7 @@ class AdminNBDController extends Controller
                     $this->yesNo($pipeline->presentation),
                     $pipeline->comments,
                     Carbon::parse($pipeline->created_at)->format('m-d-y'),
-                    '<a style="color: #9999B0;" href="/nbd/vendingpipeline/edit/' . $pipeline->id . '"><i class="fas fa-pencil-alt"/></a>',
+                    '<a  class=btn btn-link" style="color: #9999B0;" href="/nbd/vendingpipeline/edit/' . $pipeline->id . '"><i class="fas fa-pencil-alt"/></a>',
 
                     '<form action="/admin/destroypipeline" method="POST" onsubmit="return confirm(\'This action will delete this vending pipeline.  Are you sure?\');">' .
                     '<input type="hidden" name="_token" value="' . csrf_token() . '">' .
@@ -197,11 +453,7 @@ class AdminNBDController extends Controller
 
 
 
-
-
         }
-
-
 
 
         $leadconfig = [
@@ -210,6 +462,7 @@ class AdminNBDController extends Controller
             'responsive' => true,
             'paging' => false,
             'info'  => false,
+            'language' => ['emptyTable' => "No Customer Leads"],
             'columns' => [['orderable' => false], ['orderable' => false], null, ['orderable' => false], ['orderable' => false], ['orderable' => false], ['orderable' => false], null, ['className' => 'dt-center editor-edit', 'defaultContent' => '<a href="#" style="color: #9999B0;"><i class="fas fa-pencil-alt"/></a>', 'orderable' => false], ['className' => 'dt-center editor-edit', 'defaultContent' => '<a href="#" style="color: #C78B8B;"><i class="fas fa-trash-alt"/></a>', 'orderable' => false]],
             'buttons' =>  [
                 [ 
@@ -234,6 +487,7 @@ class AdminNBDController extends Controller
             'responsive' => true,
             'paging' => false,
             'info'  => false,
+            'language' => ['emptyTable' => "No New Opportunties"],
             'columns' => [['orderable' => false], ['orderable' => false], ['orderable' => false], ['orderable' => false], null, ['orderable' => false], ['orderable' => false], ['orderable' => false], null, ['className' => 'dt-center editor-edit', 'defaultContent' => '<i class="fas fa-pencil-alt"/>', 'orderable' => false], ['className' => 'dt-center editor-edit', 'defaultContent' => '<i class="fas fa-trash-alt"/>', 'orderable' => false]],
             'buttons' =>  [
                 [ 
@@ -259,6 +513,7 @@ class AdminNBDController extends Controller
             'responsive' => true,
             'paging' => false,
             'info'  => false,
+            'language' => ['emptyTable' => "No Joint Calls"],
             'columns' => [['orderable' => false], ['orderable' => false], ['orderable' => false], null, ['orderable' => false], null, ['className' => 'dt-center editor-edit', 'defaultContent' => '<i class="fas fa-pencil-alt"/>', 'orderable' => false], ['className' => 'dt-center editor-edit', 'defaultContent' => '<i class="fas fa-trash-alt"/>', 'orderable' => false]],
             'buttons' =>  [
                 [ 
@@ -285,6 +540,7 @@ class AdminNBDController extends Controller
             'responsive' => true,
             'paging' => false,
             'info'  => false,
+            'language' => ['emptyTable' => "No Conversions"],
             'columns' => [['orderable' => false], ['orderable' => false], ['orderable' => false], ['orderable' => false], ['orderable' => false], ['orderable' => false], ['orderable' => false], null, ['className' => 'dt-center editor-edit', 'defaultContent' => '<i class="fas fa-pencil-alt"/>', 'orderable' => false], ['className' => 'dt-center editor-edit', 'defaultContent' => '<i class="fas fa-trash-alt"/>', 'orderable' => false]],
             'buttons' =>  [
                 [ 
@@ -311,6 +567,7 @@ class AdminNBDController extends Controller
             'responsive' => true,
             'paging' => false,
             'info'  => false,
+            'language' => ['emptyTable' => "No Vending Pipelines"],
             'columns' => [['orderable' => false], ['orderable' => false], ['orderable' => false], ['orderable' => false], ['orderable' => false], null, ['className' => 'dt-center editor-edit', 'defaultContent' => '<i class="fas fa-pencil-alt"/>', 'orderable' => false], ['className' => 'dt-center editor-edit', 'defaultContent' => '<i class="fas fa-trash-alt"/>', 'orderable' => false]],
             'buttons' =>  [
                 [ 

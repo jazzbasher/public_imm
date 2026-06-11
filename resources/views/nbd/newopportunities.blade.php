@@ -115,10 +115,8 @@
                       </td>
                       <td>
                           @if(!empty($opportunity->projected_value ))
-                          $
+                          ${{ number_format($opportunity->projected_value, 0) }}
                           @endif
-
-                          {{ $opportunity->projected_value !== null ? number_format($opportunity->projected_value, 0) : '' }}
                       </td>
                       <td>
                           {{ $opportunity->close_date ? \Carbon\Carbon::parse($opportunity->close_date)->format("m/d/y") : ''  }}

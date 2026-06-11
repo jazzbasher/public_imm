@@ -14,7 +14,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::get('/admin/nbd/dashboard', [AdminNBDController::class, 'nbddashboard'])->name('admin.nbd.dashboard');
 
-    Route::get('/admin/ndb/sales/{id}', [AdminNBDController::class, 'usersales'])->name('sales.user');
+    Route::get('/admin/nbd/sales/{id}', [AdminNBDController::class, 'usersales'])->name('sales.user');
 
     Route::post('/admin/destroylead', [NBDController::class, 'sdeletelead'])->name('admin.sdelete.lead');
 
@@ -25,6 +25,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/admin/destroyconversion', [NBDController::class, 'sdeleteconversion'])->name('admin.sdelete.conversion');
 
     Route::post('/admin/destroypipeline', [NBDController::class, 'sdeletepipeline'])->name('admin.sdelete.pipeline');
+
+    Route::get('/admin/nbd/customerleads', [AdminNBDController::class, 'adminleads'])->name('admin.nbd.leads');
+
+    Route::get('/admin/nbd/opportunities', [AdminNBDController::class, 'adminopp'])->name('admin.nbd.opps');
 
 });
 
