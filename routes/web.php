@@ -4,11 +4,21 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NBDController;
 use App\Http\Controllers\AdminNBDController;
 use App\Http\Controllers\Admin\UserController;
+use Illuminate\Support\Facades\Mail;
 
 Auth::routes(['register' => false, 'reset' => false,]);
 
 
+
+
+/******************************************************************************************** *
+* ******************************************************************************************* *
+* ***************************     Only Admin Auth Routes     ******************************** *
+* ******************************************************************************************* *
+* ********************************************************************************************/
+
 Route::middleware(['auth', 'admin'])->group(function () {
+
     Route::get('/admin/users/create', [UserController::class, 'create'])->name('admin.users.create');
     Route::post('/admin/users', [UserController::class, 'store'])->name('admin.users.store');
 
@@ -35,15 +45,19 @@ Route::middleware(['auth', 'admin'])->group(function () {
 });
 
 
+/******************************************************************************************** *
+* ******************************************************************************************* *
+* ***************************     Only Logged Auth Users     ******************************** *
+* ******************************************************************************************* *
+* ********************************************************************************************/
+
+
 Route::middleware(['auth'])->group(function () {
 
 Route::get('/', function () {
     return redirect('nbd/newleads');
 });
 
-// Route::get('/nbd', [NBDController::class, 'index'])->name('nbd');
-
-// Route::resource('nbd', NBDController::class);
 
 Route::get('nbd/newleads', [NBDController::class, 'newleads'])->name('nbd.newleads');
 
@@ -69,7 +83,6 @@ Route::post('nbd/editopportunity/store{id}', [NBDController::class, 'updateoppor
 
 
 
-
 Route::get('nbd/jointcalls', [NBDController::class, 'jointcalls'])->name('nbd.jointcalls');
 
 Route::get('nbd/jointcalls/create', [NBDController::class, 'createnewjointcall'])->name('nbd.create.createjointcall');
@@ -79,8 +92,6 @@ Route::post('nbd/jointcalls/store', [NBDController::class, 'storejointcall'])->n
 Route::get('nbd/jointcalls/edit/{id}', [NBDController::class, 'editjointcall'])->name('edit.jointcall');
 
 Route::post('nbd/editjointcalls/store{id}', [NBDController::class, 'updatejointcall'])->name('edit.updatejointcall');
-
-
 
 
 
@@ -114,10 +125,15 @@ Route::get('nbd/vendingpipeline/edit/{id}', [NBDController::class, 'editpipeline
 Route::post('nbd/editpipelines/store{id}', [NBDController::class, 'updatepipeline'])->name('edit.updatepipeline');
 
 
-// Route::get('nbd/create', [NBDController::class, 'create'])->name('nbd.create');
 
+Route::get('/send-test-email', function () {
+    Mail::raw('This email was sent via the Mailgun HTTP API!', function ($message) {
+        $message->to('mbartlett@industrialmill.com')
+                ->subject('Mailgun API Test');
+    });
 
+    return 'Email sent successfully!';
+});
 
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 });

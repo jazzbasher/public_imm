@@ -33,10 +33,10 @@
               <div class="info-box-content">
                 <span class="info-box-text">Estimated Revenue</span>
                 <span class="info-box-number">
-                            @if(!empty($totalrevenue ))
-                            $
-                            @endif
-                          {{ $totalrevenue !== null ? number_format($totalrevenue, 0)  : '' }}</span>
+                    @if(!empty($totalrevenue ))
+                       $
+                    @endif
+                    {{ $totalrevenue !== null ? number_format($totalrevenue, 0)  : '' }}</span>
               </div>
             </div>
           </div>
@@ -108,15 +108,12 @@
 
                           {{ $pipeline->estimated_spend !== null ? number_format($pipeline->estimated_spend, 0) : '' }}
                       </td>
-                     
-                           <td>
-                        <input type="checkbox" data-on="Yes" data-off="No" data-toggle="toggle" data-onstyle="success" data-offstyle="dark" data-style="border" data-size="xs" name="presentation" value="1" @checked($pipeline->presentation == 1) disabled>
-                      
+                      <td>
+                          <input type="checkbox" data-on="Yes" data-off="No" data-toggle="toggle" data-onstyle="success" data-offstyle="dark" data-style="border" data-size="xs" name="presentation" value="1" @checked($pipeline->presentation == 1) disabled>
                       </td>
                       <td>
                           {{ $pipeline->comments }}
                       </td>
-                     
                       <td>
                           {{ $pipeline->created_at ? \Carbon\Carbon::parse($pipeline->created_at)->format("m/d/y") : ''  }}
                       </td>                                      

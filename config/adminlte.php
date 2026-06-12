@@ -368,6 +368,7 @@ return [
         'icon' => 'fas fa-user-lock',
         'icon_color' => 'cyan',
         'can'  => 'admin', // This locks the item
+        'active' => ['admin/nbd/', 'admin/nbd/*'],
         ],
         
         // ['header' => 'account_settings'],
