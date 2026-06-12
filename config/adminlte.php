@@ -329,7 +329,7 @@ return [
                 [
                     'text' => 'New Leads',
                     'url' => 'nbd/newleads',
-                    'icon' => 'far fa-address-book',
+                    'icon' => 'fas fa-users',
                     'icon_color' => 'cyan',
                 ],
                 [

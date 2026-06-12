@@ -19,7 +19,7 @@
          <div class="row">
           <div class="col-12 col-sm-6 col-md-3">
             <div class="info-box">
-              <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-phone-alt"></i></span>
+              <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-wave-square"></i></span>
               <div class="info-box-content">
                 <span class="info-box-text">Total Pipelines</span>
                 <span class="info-box-number">{{ $pipelines->count() }}
@@ -29,7 +29,7 @@
           </div>
           <div class="col-12 col-sm-6 col-md-3">
             <div class="info-box mb-3">
-              <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-funnel-dollar"></i></span>
+              <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-funnel-dollar"></i></span>
               <div class="info-box-content">
                 <span class="info-box-text">Estimated Revenue</span>
                 <span class="info-box-number">
