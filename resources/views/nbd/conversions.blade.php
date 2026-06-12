@@ -29,7 +29,7 @@
           </div>
           <div class="col-12 col-sm-6 col-md-3">
             <div class="info-box mb-3">
-              <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-calendar-alt"></i></span>
+              <span class="info-box-icon bg-primary elevation-1"><i class="fas fa-calendar-alt"></i></span>
               <div class="info-box-content">
                 <span class="info-box-text">Opportunity Volume</span>
                 <span class="info-box-number">
@@ -43,7 +43,7 @@
           <div class="clearfix hidden-md-up"></div>
           <div class="col-12 col-sm-6 col-md-3">
             <div class="info-box mb-3">
-              <span class="info-box-icon bg-info elevation-1"><i class="far fa-clock"></i></span>
+              <span class="info-box-icon bg-secondary elevation-1"><i class="far fa-clock"></i></span>
               <div class="info-box-content">
                 <span class="info-box-text">Something</span>
                 <span class="info-box-number">       
@@ -55,7 +55,7 @@
           <div class="col-12 col-sm-6 col-md-3">
             <a href="{{ route('nbd.create.createconversion') }}">
               <div class="info-box mb-3">
-              <span class="info-box-icon bg-success elevation-1"><i class="fas fa-plus-square"></i></span>
+              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-plus-square"></i></span>
               <div class="info-box-content">                
                 <span class="info-box-text">Create New Conversion</span>
                 <span class="info-box-number"> </span>
@@ -146,7 +146,6 @@
 
     @push('css')
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/mobile-tables.css') }}">
     @endpush
 
     @push('js')

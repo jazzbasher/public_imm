@@ -2,6 +2,10 @@
 
 @section('subtitle', 'NBD Conversion')
 
+@section('content_top_nav_right')
+            {{ Breadcrumbs::render('adminsalesperson', $salesperson) }}
+@endsection
+
 @section('adminlte_js')
     @parent
     <script>

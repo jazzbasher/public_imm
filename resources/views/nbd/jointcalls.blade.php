@@ -21,7 +21,7 @@
             <div class="info-box">
               <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-phone-alt"></i></span>
               <div class="info-box-content">
-                <span class="info-box-text">Total Joint Calls</span>
+                <span class="info-box-text">Total Calls</span>
                 <span class="info-box-number">{{ $jointcalls->count() }}
                 </span>
               </div>
@@ -31,19 +31,21 @@
             <div class="info-box mb-3">
               <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-calendar-alt"></i></span>
               <div class="info-box-content">
-                <span class="info-box-text">Calls This Month</span>
-                <span class="info-box-number">0</span>
+                <span class="info-box-text">Worked This Month</span>
+                <span class="info-box-number"> 
+                  <span class="badge badge-warning">{{ $workedthismonth }}</span>
+                </span>  
               </div>
             </div>
           </div>
           <div class="clearfix hidden-md-up"></div>
           <div class="col-12 col-sm-6 col-md-3">
             <div class="info-box mb-3">
-              <span class="info-box-icon bg-info elevation-1"><i class="far fa-clock"></i></span>
+              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-calendar-alt"></i></span>
               <div class="info-box-content">
-                <span class="info-box-text">Coming Due</span>
+                <span class="info-box-text">Worked Last Month</span>
                 <span class="info-box-number">       
-                <span class="badge badge-warning">{{ $countworked }}</span>                      
+                  <span class="badge badge-warning">{{ $workedlastmonth }}</span>                      
                 </span>
               </div>
             </div>
@@ -127,7 +129,6 @@
 
     @push('css')
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/mobile-tables.css') }}">
     @endpush
 
     @push('js')

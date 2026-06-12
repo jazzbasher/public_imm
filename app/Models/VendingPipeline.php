@@ -10,8 +10,8 @@ class VendingPipeline extends Model
     protected $fillable = ['customer', 'address', 'estimated_spend', 'presentation', 'site_survey', 'comments','user_id'];
 
    
-    public function user(): BelongsTo
+    public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

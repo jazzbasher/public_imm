@@ -10,6 +10,7 @@ use App\Models\Conversions;
 use App\Models\CurrentPromo;
 use App\Models\VendingPipeline;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 
 class NBDController extends Controller
@@ -59,9 +60,17 @@ class NBDController extends Controller
         $loggeduser = Auth::id();
 
         $jointcalls = JointCalls::where('user_id', $loggeduser)->where('active', 1)->orderBy('created_at', 'desc')->get();
-        $countworked = JointCalls::where('user_id', $loggeduser)->where('active', 1)->whereDate('date_worked', '>=', today())->count();
+        $workedlastmonth = JointCalls::where('user_id', $loggeduser)->where('active', 1)->whereBetween('date_worked', [
+            Carbon::now()->subMonth()->startOfMonth(),
+            Carbon::now()->subMonth()->endOfMonth()
+            ])->count();
+
+        $workedthismonth = JointCalls::where('user_id', $loggeduser)->where('active', 1)->whereBetween('date_worked', [
+            Carbon::now()->startOfMonth(),
+            Carbon::now()->endOfMonth()
+            ])->count();
         
-        return view('nbd.jointcalls', compact('jointcalls', 'countworked'));
+        return view('nbd.jointcalls', compact('jointcalls', 'workedthismonth', 'workedlastmonth'));
     }
 
 
@@ -99,10 +108,12 @@ class NBDController extends Controller
 
         $pipelines = VendingPipeline::where('user_id', $loggeduser)->where('active', 1)->orderBy('created_at', 'desc')->get();
 
+        $presentations = VendingPipeline::where('user_id', $loggeduser)->where('active',1)->where('presentation', 1)->count();
+
         $totalrevenue = VendingPipeline::where('user_id', $loggeduser)->where('active', 1)->sum('estimated_spend');
 
         
-        return view('nbd.vendingpipeline', compact('pipelines', 'totalrevenue'));
+        return view('nbd.vendingpipeline', compact('pipelines', 'totalrevenue', 'presentations'));
     }
 
 

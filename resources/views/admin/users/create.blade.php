@@ -7,6 +7,12 @@
 @stop
 
 @section('content')
+
+@if (session()->has('error'))
+    <div id="flash-message" class="alert alert-danger">
+        {{ session('error') }} 
+    </div>
+@endif
     <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -29,11 +35,12 @@
 
                         {{-- Name Field --}}
                         <div class="mb-3">
-                            <label for="name" class="form-label">Full Name</label>
+                            <label for="name" class="form-label">First and Last Name</label>
                             <input type="text" 
                                    class="form-control @error('name') is-invalid @enderror" 
                                    id="name" 
                                    name="name" 
+                                   placeholder="Tiffany Frazier"
                                    value="{{ old('name') }}" 
                                    required autocomplete="name" autofocus>
                             @error('name')
@@ -90,6 +97,19 @@
                                    name="password_confirmation" 
                                    required autocomplete="new-password">
                         </div>
+                        <div class="mb-3">
+                            <label class="form-label d-block">Is Sales?</label>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="is_sales" id="not_sales" value="0"  @checked(old('sales', 0) === 0)>
+                                <label class="form-check-label" for="not_sales">No</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="is_sales" id="is_sales" value="1">
+                                <label class="form-check-label" for="is_sales">Yes</label>
+                            </div>
+                        </div>
 
                         {{-- Form Action Button --}}
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
@@ -109,5 +129,6 @@
 @stop
 
 @section('js')
+<script src="{{ asset('js/flash-remove.js') }}"></script>
 
 @stop

@@ -30,6 +30,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::get('/admin/nbd/opportunities', [AdminNBDController::class, 'adminopp'])->name('admin.nbd.opps');
 
+    Route::get('/admin/nbd/pipelines', [AdminNBDController::class, 'adminpipeline'])->name('admin.nbd.pipelines');
+
 });
 
 

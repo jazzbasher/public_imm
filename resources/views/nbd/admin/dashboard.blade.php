@@ -1,8 +1,14 @@
 @extends('adminlte::page')
 
+@section('subtitle', 'Admin Dash')
+
+@section('content_top_nav_right')
+            {{ Breadcrumbs::render('adminhome') }}
+@endsection
+
 @section('css')
 
-@stop
+@stop 
 
 
 @section('content')
@@ -49,7 +55,7 @@
               <div class="icon">
                 <i class="fas fa-wave-square"></i>
               </div>
-              <a href="/production" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="{{ route('admin.nbd.pipelines') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->

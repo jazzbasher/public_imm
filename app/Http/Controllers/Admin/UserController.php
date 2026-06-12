@@ -21,16 +21,17 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'is_sales'   => ['required'],
         ]);
-
-        // 2. Create the user explicitly via Eloquent
+  
         User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'password' => Hash::make($validated['password'])
+            'password' => Hash::make($validated['password']),
+            'is_sales' => $validated['is_sales'],
         ]);
 
-        // 3. Redirect back safely with a success alert without changing current session
-        return redirect()->route('admin.users.create')->with('status', 'User registered successfully!');
+        
+        return redirect()->route('admin.users.create')->with('success', 'User registered successfully!');
     }
 }

@@ -2,6 +2,10 @@
 
 @section('subtitle', 'New Leads Dashboard')
 
+@section('content_top_nav_right')
+            {{ Breadcrumbs::render('adminallleads') }}
+@endsection
+
 
 @section('content')
 @if (session()->has('success'))
@@ -172,7 +176,8 @@
         yAxes: [{
             ticks: {
                 beginAtZero: true,
-                min: 0
+                min: 0, 
+                stepSize: 1,
             }
         }]
       },
@@ -237,13 +242,9 @@
             }]
         },
         options: {
-            responsive: true,
+          responsive: true,
           maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'top',
-                }
-            }
+          legend: { display: false },
         }
     });
   </script>

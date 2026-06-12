@@ -193,6 +193,8 @@ class AdminNBDController extends Controller
 
 
 
+
+
     public function adminopp()
     {
         $opps = NewOpportunities::where('active', 1)->with('user')->get();
@@ -205,16 +207,23 @@ class AdminNBDController extends Controller
             $query->where('active', 1)->where('quote', 1);
         }])->get();
 
+        $uservalue = User::where('is_sales', 1)->withSum(['newopps' => function ($query) {
+            $query->where('active', 1);
+        }], 'projected_value')->get();
+
 
 
         $pieopps = $useropps->pluck('newopps_count', 'name');
         $barquote = $userquotes->pluck('newopps_count', 'name');
+        $polarvalue = $uservalue->pluck('newopps_sum_projected_value', 'name');
 
 
         $userlabel = [];
         $oppsdata = [];
         $userquotelabel = [];
         $quotedata = [];
+        $valuelabel = [];
+        $valuedata = [];
 
 
         foreach($pieopps as $k => $v){
@@ -228,9 +237,14 @@ class AdminNBDController extends Controller
         $quotedata[] = $v;
         }
 
+        foreach($polarvalue as $k => $v){
+        $valuelabel[] = strtok($k, " ");
+        $valuedata[] = $v;
+        }
 
 
-        $heads = ['Sales','Customer', 'Interest', 'Quote?', 'Value', 'Projected', 'Convidence', 'Rep', 'Notes', 'Created', '', ''];
+
+        $heads = ['Sales','Customer', 'Interest', 'Quote?', 'Value', 'Projected', 'Confidence', 'Rep', 'Notes', 'Created', '', ''];
         $data = [];
 
 
@@ -241,8 +255,7 @@ class AdminNBDController extends Controller
                     $opp->customer,
                     $opp->interest,
                     $this->yesNo($opp->quote),
-                    // $opp->projected_value !== null ? number_format($opps->projected_value,0) : '',
-                    '2',
+                    $opp->projected_value !== null ? number_format($opp->projected_value,0) : '',
                     Carbon::parse($opp->close_date)->format('m-d-y'),
                     $opp->confidence,
                     $opp->rep,
@@ -261,12 +274,12 @@ class AdminNBDController extends Controller
 
             $oppsconfig = [
             'data' => $dataopps,
-            'order' => [[8, 'desc']],
+            'order' => [[0, 'asc'],[9, 'desc']],
             'responsive' => true,
             'paging' => false,
             'info'  => false,
             'language' => ['emptyTable' => "No New Opportunties"],
-            'columns' => [['orderable' => false], ['orderable' => false], ['orderable' => false], ['orderable' => false], null, ['orderable' => false], ['orderable' => false], ['orderable' => false], null, ['className' => 'dt-center editor-edit', 'defaultContent' => '<i class="fas fa-pencil-alt"/>', 'orderable' => false], ['className' => 'dt-center editor-edit', 'defaultContent' => '<i class="fas fa-trash-alt"/>', 'orderable' => false]],
+            'columns' => [null,['orderable' => false], ['orderable' => false], ['orderable' => false], ['orderable' => false], null, ['orderable' => false], ['orderable' => false], ['orderable' => false], null, ['className' => 'dt-center editor-edit', 'defaultContent' => '<i class="fas fa-pencil-alt"/>', 'orderable' => false], ['className' => 'dt-center editor-edit', 'defaultContent' => '<i class="fas fa-trash-alt"/>', 'orderable' => false]],
             'buttons' =>  [
                 [ 
                     'extend' => 'excelHtml5',
@@ -285,11 +298,116 @@ class AdminNBDController extends Controller
         ];
 
 
+        return view('nbd.admin.adminopportunity', compact('heads', 'oppsconfig', 'userlabel', 'oppsdata', 'userquotelabel', 'quotedata', 'valuelabel', 'valuedata'));
 
-        return view('nbd.admin.adminopportunity', compact('heads', 'oppsconfig', 'userlabel', 'oppsdata', 'userquotelabel', 'quotedata'));
+    }
 
 
 
+
+    public function adminpipeline()
+    {
+
+        $pipelines = VendingPipeline::where('active', 1)->with('user')->get();
+
+        $userpipelines = User::where('is_sales', 1)->withCount(['pipelines' => function ($query) {
+            $query->where('active', 1);
+        }])->get();
+
+        $userpresentations = User::where('is_sales', 1)->withCount(['pipelines' => function ($query) {
+            $query->where('active', 1)->where('presentation', 1);
+        }])->get();
+
+        $spendvalue = User::where('is_sales', 1)->withSum(['pipelines' => function ($query) {
+            $query->where('active', 1);
+        }], 'estimated_spend')->get();
+
+
+        $piepipelines = $userpipelines->pluck('pipelines_count', 'name');
+        $barpresentations = $userpresentations->pluck('pipelines_count', 'name');
+        $chartspent = $spendvalue->pluck('pipelines_sum_estimated_spend', 'name');
+
+
+
+        $userlabel = [];
+        $pipelinedata = [];
+        $userpreslabel = [];
+        $presdata = [];
+        $spendlabel = [];
+        $spenddata = [];
+
+
+        foreach($piepipelines as $k => $v){
+        $userlabel[] = $k;
+        $pipelinedata[] = $v;
+        }
+
+
+        foreach($barpresentations as $k => $v){
+        $userpreslabel[] = strtok($k, " ");
+        $presdata[] = $v;
+        }
+
+        foreach($chartspent as $k => $v){
+        $spendlabel[] = strtok($k, " ");
+        $spenddata[] = $v;
+        }
+
+
+
+        $heads = ['Sales','Customer', 'Address', 'EstimatedSpend', 'Presentation', 'Notes', 'Created', '', ''];
+        $data = [];
+
+
+        foreach($pipelines as $pipeline) {
+
+                $datapipelines[] = [
+                    strtok($pipeline->user->name, " "),
+                    $pipeline->customer,
+                    $pipeline->address,
+                    $pipeline->estimated_spend !== null ? number_format($pipeline->estimated_spend,0) : '',
+                    $this->yesNo($pipeline->presentation),
+                    $pipeline->comments,
+                    Carbon::parse($pipeline->created_at)->format('m-d-y'),
+                    '<a  class=btn btn-link" style="color: #9999B0;" href="/nbd/vendingpipeline/edit/' . $pipeline->id . '"><i class="fas fa-pencil-alt"/></a>',
+
+                    '<form action="/admin/destroypipeline" method="POST" onsubmit="return confirm(\'This action will delete this vending pipeline.  Are you sure?\');">' .
+                    '<input type="hidden" name="_token" value="' . csrf_token() . '">' .
+                    '<input type="hidden" name="id" value ="' . $pipeline->id . '">' .
+                    '<button type="submit" class="btn btn-link"><i style="color: #C78B8B" class="fas fa-trash-alt"/></button>' .
+                    '</form>',
+                ];
+            }
+
+
+
+            $pipelinesconfig = [
+            'data' => $datapipelines,
+            'order' => [[0, 'asc'],[6, 'desc']],
+            'responsive' => true,
+            'paging' => false,
+            'info'  => false,
+            'language' => ['emptyTable' => "No New Pipelines"],
+            'columns' => [null,['orderable' => false], ['orderable' => false], ['orderable' => false], ['orderable' => false], ['orderable' => false],  null, ['className' => 'dt-center editor-edit', 'defaultContent' => '<i class="fas fa-pencil-alt"/>', 'orderable' => false], ['className' => 'dt-center editor-edit', 'defaultContent' => '<i class="fas fa-trash-alt"/>', 'orderable' => false]],
+            'buttons' =>  [
+                [ 
+                    'extend' => 'excelHtml5',
+                    'text' => '<i class="fas fa-file-excel"></i>',
+                    'className' => 'btn btn-success',
+                    'titleAttr' => 'Excel Export',
+                    'filename' => '-Opportunities-' . today()->format('y-m-d'), 
+                ],
+                [ 
+                    'extend' => 'print',
+                    'text' => '<i class="fas fa-print"></i>',
+                    'className' => 'btn btn-success',
+                    'titleAttr' => 'Print',
+                ],
+            ]
+        ];
+
+
+        return view('nbd.admin.adminpipelines', compact('heads', 'pipelinesconfig', 'userlabel', 'pipelinedata', 'userpreslabel', 'presdata', 'spendlabel', 'spenddata'));
 
 
     }

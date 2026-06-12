@@ -29,7 +29,7 @@
           </div>
           <div class="col-12 col-sm-6 col-md-3">
             <div class="info-box mb-3">
-              <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-calendar-alt"></i></span>
+              <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-funnel-dollar"></i></span>
               <div class="info-box-content">
                 <span class="info-box-text">Estimated Revenue</span>
                 <span class="info-box-number">
@@ -43,11 +43,11 @@
           <div class="clearfix hidden-md-up"></div>
           <div class="col-12 col-sm-6 col-md-3">
             <div class="info-box mb-3">
-              <span class="info-box-icon bg-info elevation-1"><i class="far fa-clock"></i></span>
+              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-film"></i></span>
               <div class="info-box-content">
-                <span class="info-box-text">Something</span>
+                <span class="info-box-text">Presentations Given</span>
                 <span class="info-box-number">       
-                <span class="badge badge-warning"></span>                      
+                <span class="badge badge-warning">{{ $presentations }}</span>                      
                 </span>
               </div>
             </div>
@@ -137,7 +137,6 @@
 
     @push('css')
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/mobile-tables.css') }}">
     @endpush
 
     @push('js')

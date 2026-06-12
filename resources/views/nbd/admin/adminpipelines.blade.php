@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('subtitle', 'New Opportunities Dashboard')
+@section('subtitle', 'Vending Pipeline Dashboard')
 
 @section('content_top_nav_right')
-            {{ Breadcrumbs::render('adminallopps') }}
+            {{ Breadcrumbs::render('adminallpipelines') }}
 @endsection
 
 
@@ -56,10 +56,10 @@
         <div class="card border border-dark p-2 m-1">
             <div class="row">
               <div class="col-12 text-center">
-                <h5><b>New Opportunities - All Sales Team</b></h5>
+                <h5><b>Vending Pipelines - All Sales Team</b></h5>
               </div>
             </div>
-            <x-adminlte-datatable id="admincustomerlead" class="with-buttons" :heads="$heads" :config="$oppsconfig" striped compact with-buttons hoverable bordered compressed/>
+            <x-adminlte-datatable id="admincustomerlead" class="with-buttons" :heads="$heads" :config="$pipelinesconfig" striped compact with-buttons hoverable bordered compressed/>
         </div>
     </section>
 </div>
@@ -67,7 +67,6 @@
 
 @push('css')
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/mobile-tables.css') }}">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.4.1/css/buttons.dataTables.min.css">
     <style>
         .chart-container {
@@ -85,7 +84,7 @@
 
     <script>      
     var chartLabels = @json($userlabel);
-    var chartDataValues = @json($oppsdata);
+    var chartDataValues = @json($pipelinedata);
  
     new Chart(document.getElementById("myChart"), {
     type: 'pie',
@@ -125,15 +124,15 @@
       legend: { display: false },
       title: {
         display: true,
-        text: 'Opportunties By SalesPerson'
+        text: 'Vending Pipelines By SalesPerson'
       }, 
     }
   });
   </script>
 
   <script>
-    var chartLabels = @json($userquotelabel);
-    var chartDataValues = @json($quotedata);
+    var chartLabels = @json($userpreslabel);
+    var chartDataValues = @json($presdata);
 
     new Chart(document.getElementById("contact"), {
     type: 'bar',
@@ -176,8 +175,7 @@
         yAxes: [{
             ticks: {
                 beginAtZero: true,
-                min: 0,
-                stepSize: 1,
+                min: 0
             }
         }]
       },
@@ -187,20 +185,18 @@
       legend: { display: false },
       title: {
         display: true,
-        text: 'Quotes Given By Salesperson'
+        text: 'Presentations By Salesperson'
       },
       
     }
   });
   </script>
 
-
-
 <script>
 
     const ctx = document.getElementById('myPolarChart').getContext('2d');
-    var chartLabels = @json($valuelabel);
-    var chartDataValues = @json($valuedata);
+    var chartLabels = @json($spendlabel);
+    var chartDataValues = @json($spenddata);
     const data = {
       labels: chartLabels,
       datasets: [{
@@ -260,8 +256,8 @@
   </script>
 
 <script>
-  var chartLabels = @json($valuelabel);
-    var chartDataValues = @json($valuedata);
+  var chartLabels = @json($spendlabel);
+    var chartDataValues = @json($spenddata);
  
     new Chart(document.getElementById("test"), {
     type: 'doughnut',
@@ -298,7 +294,7 @@
       legend: { display: false },
       title: {
         display: true,
-        text: 'Opportunties By SalesPerson'
+        text: 'Pipelines By SalesPerson'
       }, 
     }
   });

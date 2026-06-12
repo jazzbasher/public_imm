@@ -198,7 +198,7 @@ return [
     'classes_content' => '',
     'classes_sidebar' => 'sidebar-dark-primary elevation-4',
     'classes_sidebar_nav' => '',
-    'classes_topnav' => 'navbar-dark navbar-dark',
+    'classes_topnav' => 'navbar-dark bg-dark',
     'classes_topnav_nav' => 'navbar-expand',
     'classes_topnav_container' => 'container',
 
@@ -488,6 +488,26 @@ return [
                     'type' => 'css',
                     'asset' => true,
                     'location' => '//cdn.datatables.net/buttons/3.2.6/css/buttons.dataTables.min.css',
+                ],
+            ],
+        ],
+        'CustomCss' => [
+        'active' => true,
+        'files' => [
+                [
+                'type' => 'css',
+                'asset' => true,
+                'location' => 'css/breadcrumb-nav.css',
+                ],
+            ],
+        ],
+        'TablesCss' => [
+        'active' => true,
+        'files' => [
+                [
+                'type' => 'css',
+                'asset' => true,
+                'location' => 'css/mobile-tables.css',
                 ],
             ],
         ],
