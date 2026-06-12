@@ -224,6 +224,7 @@ class AdminNBDController extends Controller
         $quotedata = [];
         $valuelabel = [];
         $valuedata = [];
+        $dataopps = [];
 
 
         foreach($pieopps as $k => $v){
@@ -335,6 +336,7 @@ class AdminNBDController extends Controller
         $presdata = [];
         $spendlabel = [];
         $spenddata = [];
+        $datapipelines = [];
 
 
         foreach($piepipelines as $k => $v){
